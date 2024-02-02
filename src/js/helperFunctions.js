@@ -1,28 +1,27 @@
 import icon from 'url:../img/icons.svg';
-import { async } from "regenerator-runtime";
-import { TIMEOUT_SEC } from "./config";
+import { async } from 'regenerator-runtime';
+import { TIMEOUT_SEC } from './config';
 
 // Model Function
 
 class ModelHelper {
   // To Make Limit Time Per Request
-  _timeout (s) {
+  _timeout(s) {
     return new Promise(function (_, reject) {
       setTimeout(function () {
         reject(new Error(`Request took too long! Timeout after ${s} second`));
       }, s * 1000);
     });
-  };
+  }
 
   // Get JSON Resopnse From An API
   async getJSON(url) {
     try {
       const res = await Promise.race([fetch(url), this._timeout(TIMEOUT_SEC)]);
       const data = await res.json();
-      if(!res.ok)
-        throw new Error(`${data.message} (${res.status})`);
+      if (!res.ok) throw new Error(`${data.message} (${res.status})`);
       return data;
-    } catch(err) {
+    } catch (err) {
       throw err;
     }
   }
@@ -38,17 +37,16 @@ class ModelHelper {
       });
       const res = await Promise.race([req, this._timeout(TIMEOUT_SEC)]);
       const data = await res.json();
-      if(!res.ok)
-        throw new Error(`${data.message} (${res.status})`);
+      if (!res.ok) throw new Error(`${data.message} (${res.status})`);
       return data;
-    } catch(err) {
+    } catch (err) {
       throw err;
     }
   }
 
   // Formating The Object
   format(object, jsNotaion = true) {
-    if(jsNotaion) {
+    if (jsNotaion) {
       return {
         id: object.id,
         title: object.title,
@@ -58,8 +56,8 @@ class ModelHelper {
         servings: object.servings,
         cookingTime: object.cooking_time,
         ingredients: object.ingredients,
-        ...(object.key && {key: object.key})
-      }
+        ...(object.key && { key: object.key }),
+      };
     }
     return {
       title: object.title,
@@ -69,7 +67,7 @@ class ModelHelper {
       servings: +object.servings,
       cooking_time: +object.cookingTime,
       ingredients: object.ingredients,
-    }
+    };
   }
 }
 
@@ -78,13 +76,11 @@ class ModelHelper {
 class ViewHelper {
   // To Empty The Content
   emptyContent(parent) {
-    if(parent.childElementCount != 0)
-      parent.innerHTML = "";
+    if (parent.childElementCount != 0) parent.innerHTML = '';
   }
   // To Render Loading Icon
   renderSpiner(parent) {
-    const markup =
-    `
+    const markup = `
     <div class="spinner">
       <svg>
         <use href="${icon}.svg#icon-loader"></use>
@@ -96,16 +92,15 @@ class ViewHelper {
   // To Hide Loading Icon
   hideSpiner(parent) {
     const spiner = parent.querySelector('.spinner');
-    if(spiner) {
+    if (spiner) {
       spiner.remove();
     }
   }
   // To Render Specific Error
   renderError(parent, msg) {
-    if(msg.includes('Invalid _id'))
+    if (msg.includes('Invalid _id'))
       msg = `Couldn't Find The Recipe. Please try again!`;
-    const markup =
-    `
+    const markup = `
     <div class="error">
       <div>
         <svg>
@@ -123,8 +118,4 @@ class ViewHelper {
 const helperView = new ViewHelper();
 const helperModel = new ModelHelper();
 
-
-export {
-  helperView,
-  helperModel,
-};
+export { helperView, helperModel };

@@ -3,42 +3,45 @@ import { helperView } from '../helperFunctions';
 
 const resultsContainer = document.querySelector('.results');
 
-const emptyContent = function() {
+const emptyContent = function () {
   helperView.emptyContent(resultsContainer);
 };
 
-const renderSpiner = function() {
+const renderSpiner = function () {
   helperView.renderSpiner(resultsContainer);
 };
 
-const hideSpiner = function() {
+const hideSpiner = function () {
   helperView.hideSpiner(resultsContainer);
 };
 
-const renderError = function(msg) {
+const renderError = function (msg) {
   helperView.renderError(resultsContainer, msg);
 };
 
 // Check For Old Selected Recipe From The Results Container
-const _checkOldSelected = function() {
-  const oldOne = document.querySelector('.search-results .preview__link--active');
-  if(oldOne)
-    oldOne.classList.remove('preview__link--active');
+const _checkOldSelected = function () {
+  const oldOne = document.querySelector(
+    '.search-results .preview__link--active'
+  );
+  if (oldOne) oldOne.classList.remove('preview__link--active');
 };
 
 // Render The Cliked Recipe As Selected One
-const renderSelected = function(newOne) {
+const renderSelected = function (newOne) {
   _checkOldSelected();
-  if(newOne)
-    newOne.classList.add('preview__link--active');
+  if (newOne) newOne.classList.add('preview__link--active');
 };
 
 // Render The Result On The Page
-const renderResults = function(data) {
-  const markup = data.map(ele => {
-    return `
+const renderResults = function (data) {
+  const markup = data
+    .map(ele => {
+      return `
     <li class="preview search-preview">
-      <a class="preview__link ${ele.id == window.location.hash.slice(1) ? "preview__link--active" : ""}" href="#${ele.id}">
+      <a class="preview__link ${
+        ele.id == window.location.hash.slice(1) ? 'preview__link--active' : ''
+      }" href="#${ele.id}">
         <figure class="preview__fig">
           <img src="${ele.image}" alt="Test" />
         </figure>
@@ -56,24 +59,24 @@ const renderResults = function(data) {
       </a>
     </li>
     `;
-  }).join('');
+    })
+    .join('');
   emptyContent();
   resultsContainer.insertAdjacentHTML('afterbegin', markup);
 };
 
 // To Handle Scroll To The Top Of Recipe When Clicking On It
-const addHandlerScroll = function(callback) {
+const addHandlerScroll = function (callback) {
   const header = document.querySelector('.header');
   const elementsContainer = document.querySelector('.results');
   elementsContainer.addEventListener('click', callback.bind(null, header));
 };
 
 // Handle Selected Recipes When Clicking On One
-const addHandelrClick = function(callback) {
-  resultsContainer.addEventListener('click', function(e) {
+const addHandelrClick = function (callback) {
+  resultsContainer.addEventListener('click', function (e) {
     const clicked = e.target.closest('a');
-    if(clicked)
-      callback(clicked);
+    if (clicked) callback(clicked);
   });
 };
 

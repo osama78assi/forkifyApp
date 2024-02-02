@@ -3,34 +3,33 @@ import { helperView } from '../helperFunctions';
 
 const bookmarksContainer = document.querySelector('.header .bookmarks__list');
 
-const emptyContent = function() {
+const emptyContent = function () {
   helperView.emptyContent(bookmarksContainer);
 };
 
 // Check For Old Selected From Bookmark Container
-const _checkSelected = function() {
+const _checkSelected = function () {
   const selected = document.querySelector('.header .preview__link--active');
-  if(selected)
-    selected.classList.remove('preview__link--active');
+  if (selected) selected.classList.remove('preview__link--active');
 };
 
 // Mark The New Recipe As Selected On The Bookmark Container
-const renderSelected = function() {
+const renderSelected = function () {
   _checkSelected();
-  const id = (window.location.hash);
+  const id = window.location.hash;
   const newSelected = document.querySelector(`.header [href='${id}']`);
-  if(newSelected)
-    newSelected.classList.add('preview__link--active');
+  if (newSelected) newSelected.classList.add('preview__link--active');
 };
 
 // Render Recipes In The Container
-const renderBookmarks = function(recipes) {
+const renderBookmarks = function (recipes) {
   _checkSelected();
   helperView.emptyContent(bookmarksContainer);
   let markup;
-  if(recipes && recipes.length) {
-    markup = recipes.map((recipe) => {
-      return `
+  if (recipes && recipes.length) {
+    markup = recipes
+      .map(recipe => {
+        return `
         <li class="preview">
           <a class="preview__link" href="#${recipe.id}">
             <figure class="preview__fig">
@@ -41,17 +40,19 @@ const renderBookmarks = function(recipes) {
               ${recipe.name}
               </h4>
               <p class="preview__publisher">${recipe.publisher}</p>
-              <div class="recipe__user-generated ${!recipe.key ? 'hidden' : ''}">
+              <div class="recipe__user-generated ${
+                !recipe.key ? 'hidden' : ''
+              }">
               <svg><use href="${icon}.svg#icon-user"></use></svg>
             </div>
             </div>
           </a>
         </li>
-      `
-    }).join('');
+      `;
+      })
+      .join('');
   } else {
-    markup =
-    `
+    markup = `
     <div class="message">
     <div>
       <svg>
@@ -67,8 +68,4 @@ const renderBookmarks = function(recipes) {
   bookmarksContainer.insertAdjacentHTML('afterbegin', markup);
 };
 
-export {
-  emptyContent,
-  renderBookmarks,
-  renderSelected,
-};
+export { emptyContent, renderBookmarks, renderSelected };

@@ -56,7 +56,7 @@ const controlRecipe = async function() {
 
   } catch(err) {
     recipeView.hideSpiner();
-    recipeView.renderError(err.message);
+    recipeView.renderError("Something Went Wrong !");
     console.error(err);
   }
 };
@@ -113,6 +113,8 @@ const controlSearchResults = async function() {
     // Control Pages
     controlSearchPages();
   } catch(err) {
+    
+    resultsView.renderError("Something Went Wrong !");
     console.error(err);
   }
 };
