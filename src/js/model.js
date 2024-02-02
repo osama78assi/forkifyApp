@@ -23,6 +23,9 @@ const loadResipe = async function (id) {
 };
 
 const loadSearchReults = async function (query) {
+  state.searchResult.query = '';
+  state.searchResult.page = 1;
+  state.searchResult.results = [];
   try {
     const data = await helperModel.getJSON(
       `${API_URL}?search=${query}&key=${API_KEY}`
@@ -38,9 +41,6 @@ const loadSearchReults = async function (query) {
       };
     });
   } catch (err) {
-    state.searchResult.query = '';
-    state.searchResult.page = 1;
-    state.searchResult.results = [];
     throw err;
   }
 };
