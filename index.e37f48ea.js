@@ -594,7 +594,8 @@ var _regeneratorRuntime = require("regenerator-runtime");
 const controlRecipe = async function() {
     try {
         const id = window.location.hash;
-        if (!id) return;
+        if (!id) // When Opening The Page If There Any Query
+        return;
         // Clean
         _recipeView.emptyContent();
         // Add Load Icon
@@ -633,7 +634,7 @@ const controlDecrease = function() {
 };
 // To Change Between Pages
 const controlSearchPages = function(page = 1) {
-    if (_model.state.searchResult.results.length) {
+    if (_model.state.searchResult.results.length && page != -1) {
         const data = _model.getRecipes(page); // Get Recipes According To The Page
         // Round The Amount To Top (To Make 55 Item -> 6 Pages)
         const amount = Math.ceil(parseFloat(_model.state.searchResult.results.length) / (0, _config.RECIPE_PER_PAGE));
@@ -655,6 +656,8 @@ const controlSearchResults = async function() {
             _resultsView.renderError("No Recipes Found !");
             return;
         }
+        // Remove Arrows
+        controlSearchPages(-1);
         // Empty Recults Content
         _resultsView.emptyContent();
         // Render Loading Icon
@@ -2033,6 +2036,9 @@ const loadResipe = async function(id) {
     }
 };
 const loadSearchReults = async function(query) {
+    state.searchResult.query = "";
+    state.searchResult.page = 1;
+    state.searchResult.results = [];
     try {
         const data = await (0, _helperFunctions.helperModel).getJSON(`${(0, _config.API_URL)}?search=${query}&key=${(0, _config.API_KEY)}`);
         state.searchResult.query = query;
@@ -2048,9 +2054,6 @@ const loadSearchReults = async function(query) {
             };
         });
     } catch (err) {
-        state.searchResult.query = "";
-        state.searchResult.page = 1;
-        state.searchResult.results = [];
         throw err;
     }
 };
