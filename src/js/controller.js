@@ -18,12 +18,12 @@ import { async } from 'regenerator-runtime';
 //   module.hot.accept();
 // }
 
-
 // Control Showing The Recipe
-const controlRecipe = async function() {
+const controlRecipe = async function () {
   try {
     const id = window.location.hash;
-    if(!id) // When Opening The Page If There Any Query
+    if (!id)
+      // When Opening The Page If There Any Query
       return;
     // Clean
     recipeView.emptyContent();
@@ -47,38 +47,45 @@ const controlRecipe = async function() {
 
     // When User Mark/Unmark The Recipe
     model.addHandlerCheck(controlToggleMarkbook, id.slice(1));
-    
+
     // Making Changing Serving Possible
     recipeView.changeServingValue(controlIncrease, controlDecrease);
 
     // Hide Load Icon
     recipeView.hideSpiner();
-
-  } catch(err) {
+  } catch (err) {
     recipeView.hideSpiner();
-    recipeView.renderError("Something Went Wrong !");
+    recipeView.renderError('Something Went Wrong !');
     console.error(err);
   }
 };
 
 // Control Increase Serving
-const controlIncrease = function() {
+const controlIncrease = function () {
   model.increaseServing();
-  recipeView.changeServingRender(model.state.recipe.ingredients, model.state.recipe.servings);
+  recipeView.changeServingRender(
+    model.state.recipe.ingredients,
+    model.state.recipe.servings
+  );
 };
 
 // Control Decrease Serving
-const controlDecrease = function() {
+const controlDecrease = function () {
   model.decreaseServing();
-  recipeView.changeServingRender(model.state.recipe.ingredients, model.state.recipe.servings);
-}
+  recipeView.changeServingRender(
+    model.state.recipe.ingredients,
+    model.state.recipe.servings
+  );
+};
 
 // To Change Between Pages
-const controlSearchPages = function(page = 1) {
-  if(model.state.searchResult.results.length) {
+const controlSearchPages = function (page = 1) {
+  if (model.state.searchResult.results.length && page != -1) {
     const data = model.getRecipes(page); // Get Recipes According To The Page
     // Round The Amount To Top (To Make 55 Item -> 6 Pages)
-    const amount = Math.ceil(parseFloat(model.state.searchResult.results.length) / RECIPE_PER_PAGE);
+    const amount = Math.ceil(
+      parseFloat(model.state.searchResult.results.length) / RECIPE_PER_PAGE
+    );
     page = parseInt(page);
     resultsView.renderResults(data); // Render The Results
     paginationView.renderArrows(page - 1, page + 1, amount); // Get Left Arrow And Right Arrow
@@ -91,13 +98,17 @@ const controlSearchPages = function(page = 1) {
 };
 
 // To Control Searching And Send Requests
-const controlSearchResults = async function() {
+const controlSearchResults = async function () {
   try {
     const query = searchView.getQuery();
-    if(!query) {
+    if (!query) {
       resultsView.renderError('No Recipes Found !');
       return;
     }
+
+    // Remove Arrows
+    controlSearchPages(-1);
+
     // Empty Recults Content
     resultsView.emptyContent();
 
@@ -112,15 +123,14 @@ const controlSearchResults = async function() {
 
     // Control Pages
     controlSearchPages();
-  } catch(err) {
-    
-    resultsView.renderError("Something Went Wrong !");
+  } catch (err) {
+    resultsView.renderError('Something Went Wrong !');
     console.error(err);
   }
 };
 
 // Normall Function
-const controlScroll = function(ele) {
+const controlScroll = function (ele) {
   const coordinat = ele.getBoundingClientRect(); // Smooth Scroll To Specific Element
   window.scrollTo({
     left: 0,
@@ -130,17 +140,17 @@ const controlScroll = function(ele) {
 };
 
 // Toggle Markbook Handling
-const controlToggleMarkbook = function(state) {
+const controlToggleMarkbook = function (state) {
   // Depending On The State
   // True It's Marked Then User Wants To Unmark
   // Otherwise He Wants To Mark It
-  if(!state) {
+  if (!state) {
     model.addBookmark(
       model.state.recipe.id,
       model.state.recipe.image,
       model.state.recipe.title,
       model.state.recipe.publisher,
-      model.state.recipe.key,
+      model.state.recipe.key
     );
     bookmarksView.renderBookmarks(model.state.bookMarks);
   } else {
@@ -156,7 +166,7 @@ const controlToggleMarkbook = function(state) {
 };
 
 // Add Recipe Controller
-const controlAddRecipe = async function(data) {
+const controlAddRecipe = async function (data) {
   try {
     // Render Loading Icon
     addRecipeView.renderSpiner();
@@ -184,11 +194,10 @@ const controlAddRecipe = async function(data) {
     // Hide Spinner
     addRecipeView.hideSpinner();
   }
-}
-
+};
 
 // Will Call In The Page ( Main )
-const init = function() {
+const init = function () {
   // Publisher-Scriper Pattern
 
   // Changing Hash
@@ -205,14 +214,15 @@ const init = function() {
 
   // Handle Pages Logic
   paginationView.addHandlerServing(
-  function() {
-    // The Next Page
-    controlSearchPages(++model.state.searchResult.page);
-  },
-  function() {
-    // The Previous Page
-    controlSearchPages(--model.state.searchResult.page);
-  });
+    function () {
+      // The Next Page
+      controlSearchPages(++model.state.searchResult.page);
+    },
+    function () {
+      // The Previous Page
+      controlSearchPages(--model.state.searchResult.page);
+    }
+  );
 
   // Handle Show/Hide Add Recipe Form
   addRecipeView.addHandlerShowForm(addRecipeView.showForm);
