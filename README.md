@@ -1,5 +1,5 @@
 # Forkify App
-a recipes application where you can find over than 100,000 recipe that can make thinking of (what shall we eat today) everyday is impossible
+a recipes application where you can find over than 100,000 recipe that can make thinking of (what shall we eat today) is impossible
 # here you can do the following:
 - see a lot of recipes by searching
 - create your own recipes
